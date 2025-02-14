@@ -55,6 +55,14 @@ public class ZeroRowCol {
             }            
             System.out.println();
         }
+        List<Integer> l = new ArrayList<Integer>();
+        for(int i = 0; i< 10; i++){
+            l.add(i);
+        }
+        for (int i = 0; i < l.size() / 2; i++){
+            l.remove(0);
+            System.out.println("removed one");
+        }
         
 		/* Put any of your own tests here
 			 This code won't be executed when you submit */
