@@ -72,7 +72,7 @@ public class SemanticSimilarity
             squares2 += (value2 * value2);
         }
 
-        return (double)sum / (Math.round(Math.sqrt(squares2) * Math.sqrt(squares1)));
+        return (double)sum / (Math.sqrt(squares2) * Math.sqrt(squares1));
     }
 
 
@@ -120,8 +120,9 @@ public class SemanticSimilarity
         
         // run "javac SemanticSimilarity.java"  and then "java SemanticSimilarity text.txt"
         System.out.println(sim.similarity("this", "that"));
+        System.out.println(sim.similarity("those", "these"));
         System.out.println(sim.similarity("this", "is"));
-        
+        System.out.println(sim.similarity("what", "why"));
 
     }
 

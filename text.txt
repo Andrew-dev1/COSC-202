@@ -1,3 +1,10 @@
-that is fun. 
+these is fun. 
 How are you doing today? 
-this is fun.
+those is fun.
+The semantic similarities of these sentences are so hard to test,
+I don't think it is super fair to try and add many test cases.
+What test cases could I even use to make this make sense for me?
+I feel like it is unfair to try and make it a cohesive piece
+Why don't I bs something? 
+Such as superplagerism. 
+What is stopping me and why? 
