@@ -22,13 +22,23 @@ public class FindRank{
             larger = list1.size();
         }
 
-        if(smaller +larger > rank){
+        if(smaller +larger <= rank){
             return null;
         }
-        T object1 = list1.get(smaller);
-        T object2 = list2.get(rank - smaller);
-        
-        
+    
+        T object1 = list1.get(rank/2);
+        T object2 = list2.get(rank/2);
+
+        if(rank == 1){
+            if(object1.compareTo(object2) > 0){
+                return object2;
+            }
+            else{
+                return object1;
+            }
+        }
+
+
         return null;    // placeholder
         
     }
