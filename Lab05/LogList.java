@@ -114,18 +114,9 @@ public class LogList<E> {
     }
 
     public String toString() {
-        StringBuilder result = new StringBuilder();
         ArrayList<E> results = new ArrayList<>();
         helper1(results, tree.root);
-
-        result.append("[");
-        helper(result, tree.root);
-
-        // remove last 
-        if (result.length() > 1) {
-            result.setLength(result.length() - 2);
-        }
-        result.append("]");
+        
         return results.toString();
     }
     public ArrayList<E> helper1(ArrayList<E> builder, Node<Double,E> node){
@@ -138,15 +129,6 @@ public class LogList<E> {
         return builder; 
     }
 
-    public StringBuilder helper(StringBuilder builder, Node<Double,E> node){
-        if(node == null)
-            return builder;
-
-        helper(builder, node.getLeft());
-        builder.append(node.getValue() + ", "); 
-        helper(builder, node.getRight());
-        return builder; 
-    }
 
     public static void main(String[] args) {
         Set<String> strings = new HashSet<>();
