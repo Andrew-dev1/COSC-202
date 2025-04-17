@@ -12,12 +12,14 @@ import java.util.*;
 
 public class Puzzle {
 
+    // needs to be comparable so that priority queue knows what to use for implicit comparison
     private static class boardState implements Comparable<boardState>  {
         int[][] board;
-        private int heuristicvalue;
+        private int heuristicvalue; // while named heuristic, is only Manhattan value
         private int moves;
         String path = "";
 
+        // constructor
         public boardState(int[][] b, int heuristic, String _path, int move){
             board = b;
             heuristicvalue = heuristic;
@@ -33,6 +35,7 @@ public class Puzzle {
             return moves;
         }
 
+        // created to print out board state
         public String bToString(){
             StringBuilder saveString = new StringBuilder();
             for(int i = 0; i< board.length; i++){
@@ -41,7 +44,6 @@ public class Puzzle {
                     saveString.append(number);
                 }
             }
-           
             return saveString.toString();
         }
 
@@ -114,27 +116,21 @@ public class Puzzle {
         return puzzle;
     }
 
-    public static int[][] deepCopy(int[][] board){
-        int[][] newCopy = new int[board.length][board.length];
-        for(int i = 0; i< board.length; i++){
-            for(int j = 0; j < board.length; j++){
-                newCopy[i][j] = board[i][j];
-            }
-        }
-        return newCopy;
-    }
     
     public static String solvePuzzle(int[][] puzzle) {
         PriorityQueue<boardState> queue = new PriorityQueue<>();
         HashSet<String> visitedBoards = new HashSet<>();
 
+        // loads initial board onto priority queue 
         int h = heuristicCalculation(puzzle);
         queue.offer(new boardState(puzzle, h, "", 0));
 
         while(! queue.isEmpty()){
             boardState currentBoard = queue.poll();
-
             int[][] board = currentBoard.board;
+
+            // Although there is bToString, 0 had to be found to adjust the board. 
+            // combined into one double for loop to reduce computation
             StringBuilder saveString = new StringBuilder(); 
             int x = -1; int y = -1;
             for(int i = 0; i< board.length; i++){
@@ -155,7 +151,7 @@ public class Puzzle {
             
             visitedBoards.add(bString);
             
-
+            // base case for winning, when no tiles are in wrong positions
             if(currentBoard.heuristicvalue == 0){
                 return currentBoard.path;
             }
@@ -169,6 +165,7 @@ public class Puzzle {
                 int newX = x + directions[i][0];
                 int newY = y + directions[i][1];
 
+                // makes sure the new X,Y are in bound before creating a newBoard
                 if (newX >= 0 && newX < puzzle.length && newY >= 0 && newY < puzzle[0].length) {
                     int[][] newBoard = deepCopy(currentBoard.board);
                     newBoard[x][y] = newBoard[newX][newY];
@@ -186,10 +183,18 @@ public class Puzzle {
         return null;  // no solution found
     }
 
+    // do a full copy of the board
+    public static int[][] deepCopy(int[][] board){
+        int[][] newCopy = new int[board.length][board.length];
+        for(int i = 0; i< board.length; i++){
+            for(int j = 0; j < board.length; j++){
+                newCopy[i][j] = board[i][j];
+            }
+        }
+        return newCopy;
+    }
 
-
-
-    // done 
+    // calculates the manhattan value of the current board
     public static int heuristicCalculation(int[][]puzzle){
         int n = puzzle.length;
         int value = 0; 
@@ -199,8 +204,6 @@ public class Puzzle {
 
                 // for 2x2, perfect => 1 =(0,0) 2= (0,1) 3= (1,0) 0= (1,1)
                 if(number!= 0){
-                    // int row = (number -1) / n;
-                    // int col = (number-1) % n;
                     value += Math.abs(i- ((number-1) / n)) + Math.abs(j- ((number-1) % n));
                 }
             }
@@ -240,17 +243,17 @@ public class Puzzle {
         System.out.println("\nSolution:");
         System.out.println(solution);
 
-        int[][] test = {{1,2,3},{7,4,5},{0,8,6}};
-        System.out.println("test:");
-        for (int row = 0; row < 3; row++) {
-            for (int col = 0; col < 3; col++) {
-                System.out.printf("%4d", test[row][col]);
-            }
-            System.out.println();
-        }
-        solution = solvePuzzle(test);
-        System.out.println("\nSolution:");
-        System.out.println(solution);
+        // int[][] test = {{1,2,3},{7,4,5},{0,8,6}};
+        // System.out.println("test:");
+        // for (int row = 0; row < 3; row++) {
+        //     for (int col = 0; col < 3; col++) {
+        //         System.out.printf("%4d", test[row][col]);
+        //     }
+        //     System.out.println();
+        // }
+        // solution = solvePuzzle(test);
+        // System.out.println("\nSolution:");
+        // System.out.println(solution);
         
 
         
