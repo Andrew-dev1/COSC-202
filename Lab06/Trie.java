@@ -35,7 +35,7 @@ public class Trie {
 
 
         if (node.isWord && currIndex == target.length()) {
-            results.put(currentWord, Math.min(results.getOrDefault(currentWord, Integer.MAX_VALUE), maxDist - mistakesLeft));
+            results.put(currentWord, Math.min(results.getOrDefault(currentWord, Integer.MAX_VALUE), maxDist - mistakesLeft));    
         }
 
         // next letters 
@@ -51,15 +51,17 @@ public class Trie {
                     //substitution - goes to other Nodes with one less on maxDist
                     suggestionsHelper1(newNode, currentWord+ c, currIndex+1, target, targetLength, mistakesLeft-1, maxDist, results);
                 }
-            }else{
-                // insertion- extra char in between, so one less on maxDist and adds letter
-                suggestionsHelper1(newNode, currentWord + c, currIndex, target, targetLength, mistakesLeft -1, maxDist, results);
             }
+            // insertion- extra char in between, so one less on maxDist and adds letter
+            suggestionsHelper1(newNode, currentWord + c, currIndex, target, targetLength, mistakesLeft -1, maxDist, results);
+            
         }
 
         //deletion- goes forward to next Node with one less on the maxDist 
         //can increment forward on the target to delete 
         if (currIndex < target.length()) {
+            // System.out.println("\nDeleting character: " + target.charAt(currIndex) + " at index " + currIndex + " " + currentWord);
+            // System.out.println(mistakesLeft);
             suggestionsHelper1(node, currentWord, currIndex+1, target, targetLength, mistakesLeft-1, maxDist, results);
         }
 
