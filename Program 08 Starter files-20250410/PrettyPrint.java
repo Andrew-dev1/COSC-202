@@ -3,7 +3,7 @@ import java.io.*;
 
 public class PrettyPrint {
 
-    public static List<Integer> splitWords(int[] lengths, int L, SlackFunctor slackFunctor) {
+    public static List<Integer> splitWords(int[] lengths, int L, SlackFunctor sf) {
         if (lengths == null || lengths.length == 0) {
             return Collections.emptyList();
         }
@@ -11,57 +11,55 @@ public class PrettyPrint {
         int n = lengths.length;
         
         // dp[i] = minimum cost of formatting words[i...n-1]
-        int[] dp = new int[n + 1];
+        double[] slacks = new double[n + 1];
         // next[i] = index to break after when starting at position i
         int[] next = new int[n + 1];
         
         // Base case: no cost to format an empty list
-        dp[n] = 0;
+        slacks[n] = 0;
         
         // Fill dp array from right to left (bottom-up)
         for (int start = n - 1; start >= 0; start--) {
             int lineLength = 0;
-            dp[start] = Integer.MAX_VALUE;
+            slacks[start] = Integer.MAX_VALUE;
             
             for (int end = start; end < n; end++) {
+                // if a word is too long, algorithm fails
                 int current = lengths[end];
                 if(current > L){
                     return null;
                 }
-                // Add word length
+                
+                // Add word length and space if not the first word
                 lineLength += current;
-                // Add space if not the first word
                 if (end > start) {
                     lineLength += 1;
                 }
-                
-                // Break if exceeding line width
+                 
                 if (lineLength > L) {
                     break;
                 }
                 
-                // Calculate slack penalty
+                // Calculate slack 
                 int slack = L - lineLength;
-                int penalty = slack * slack;
+                double squared = slack*slack; // SlackFunctor doesn't work
                 
-                // Calculate total cost including penalty
-                int cost = penalty + dp[end + 1];
+                // Calculate total cost of slack from current line and lines after 
+                double totalCost = squared + slacks[end + 1];
                 
-                // Update if we found a better solution
-                if (cost < dp[start]) {
-                    dp[start] = cost;
+                // Update if we found a better solution if there is enough space 
+                // in current line to add the word from line before, add it and increment break point
+                if (totalCost < slacks[start]) {
+                    slacks[start] = totalCost;
                     next[start] = end + 1;
                 }
             }
+        
             
-            // Handle case where no valid break was found
-            if (dp[start] == Integer.MAX_VALUE) {
-                next[start] = start + 1;
-                dp[start] = Integer.MAX_VALUE / 2; // High penalty but avoid overflow
-            }
         }
         
-        // Build result by following the optimal breaks
+        // Build result by following the optimal breaks 
+        // array next points to subsequent word to break at
         List<Integer> result = new ArrayList<>();
         int i = 0;
         while (i < n) {
@@ -72,73 +70,6 @@ public class PrettyPrint {
         
         return result;
     }
-
-    private static int computeMinimumCost(int startPos, int[] lengths, int lineWidth, Map<Integer, Integer> memo, int[] lineBreaks) {
-    // Base case: no more words to process
-    if (startPos >= lengths.length) {
-        return 0;
-    }
-    
-    // Return memoized result if available
-    if (memo.containsKey(startPos)) {
-        return memo.get(startPos);
-    }
-    
-    int currentLineLength = 0;
-    int minimumCost = Integer.MAX_VALUE;
-    int optimalBreakPoint = -1;
-    
-    // Try different ending positions for current line
-    for (int endPos = startPos; endPos < lengths.length; endPos++) {
-        // Add current word length
-        int wordAfter = lengths[endPos];
-        if(wordAfter > lineWidth){
-            return -1;
-        }
-        if (endPos == startPos) {
-            currentLineLength = wordAfter;
-        } else {
-            // Add space + word length
-            currentLineLength += 1 + wordAfter; 
-        }
-        
-        // Stop if we exceed the line width
-        if (currentLineLength > lineWidth) {
-            break;
-        }
-        
-        // Calculate slack penalty
-        int slackSpace = lineWidth - currentLineLength;
-        // Last line has no penalty (common in text formatting algorithms)
-        int penalty = (endPos == lengths.length - 1) ? 0 : slackSpace * slackSpace;
-        
-        // Recursively calculate cost for the rest of the text
-        int totalCost = penalty + computeMinimumCost(endPos + 1, lengths, lineWidth, memo, lineBreaks);
-        
-        // Update minimum if we found a better solution
-        if (totalCost < minimumCost) {
-            minimumCost = totalCost;
-            optimalBreakPoint = endPos + 1;
-        }
-    }
-    // Handle the case where no valid break was found (e.g., single word too long for line)
-    if (optimalBreakPoint == -1) {
-        // Force break after current word as a fallback
-        optimalBreakPoint = startPos + 1;
-        minimumCost = Integer.MAX_VALUE / 2;
-    }
-
-    
-    // Store the optimal break point
-    lineBreaks[startPos] = optimalBreakPoint;
-    
-    // Memoize the result
-    memo.put(startPos, minimumCost);
-    
-    return minimumCost;
-}
-    
-
 
 
     public static String help_message() {
