@@ -203,6 +203,7 @@ public class Puzzle {
                 int number = puzzle[i][j];
 
                 // for 2x2, perfect => 1 =(0,0) 2= (0,1) 3= (1,0) 0= (1,1)
+                //computes the number of moves a tile is from its correct position
                 if(number!= 0){
                     value += Math.abs(i- ((number-1) / n)) + Math.abs(j- ((number-1) % n));
                 }
