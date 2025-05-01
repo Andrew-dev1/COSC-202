@@ -13,19 +13,8 @@ public class Specimens {
         Collection<Pair> samePairs,     /* pairs where specimens are judged to be the same species */
         Collection<Pair> diffPairs      /* pairs where specimens are judged to be different species */
         ){
-             // HashMap<Integer, HashMap<Integer, Integer>> graph1 = new HashMap<>();
-        // int speciesNumber = 1; 
-        // int tempNumber = speciesNumber;
-        // if(graph1.get(x) == null){
-        //     graph1.put(x, new HashMap<>());
-        // }
-        // if(graph1.get(y) == null){
-        //     graph1.put(y, new HashMap<>());
-        // }
-        // graph1.get(x).put(y,tempNumber);
-        // graph1.get(y).put(x, tempNumber);
-        // build graph 
 
+    // can be changed 
     if(samePairs.isEmpty() && diffPairs.isEmpty() && n == 0){ return new ArrayList<>(); }
 
     HashMap<Integer, ArrayList<Integer>> graph = new HashMap<>();
@@ -71,48 +60,59 @@ public class Specimens {
     if(!contradictions.isEmpty()) return contradictions;
 
     // finding the remaining pairs to compare 
-    Map<Integer, Integer> groupReps = new HashMap<>();
+    // takes the first number of each group and stores as a comparison factor later
+    HashMap<Integer, Integer> groupReps = new HashMap<>();
     for (int i = 0; i < n; i++) {
         int group = groups.get(i); 
         if (!groupReps.containsKey(group)) {
             groupReps.put(group, i);
         }
     }
+    printGroups(groupReps);
 
+    // creates a set of groups that shouldn't be added from the diffPairs
+    HashSet<Pair> comparedGroupPairs = new HashSet<>();
+    for (Pair diff : diffPairs) {
+        int group1 = groups.get(diff.x());
+        int group2 = groups.get(diff.y());
+        // Ensure smaller group ID is first to maintain consistency
+        if (group1 > group2) {
+            int temp = group1;
+            group1 = group2;
+            group2 = temp;
+        }
+        System.out.printf("%d %d\n", group1, group2);
+        comparedGroupPairs.add(new Pair(group1, group2));
+    }
+
+    // creates a final list of specimens to compare
+    // would have to compare up to (number of components) squared
     List<Pair> requiredComparisons = new ArrayList<>();
-    List<Integer> group = new ArrayList<>(groupReps.keySet());
-    Collections.sort(group);
-
-    for (int i = 0; i < group.size(); i++) {
-        for (int j = i + 1; j < group.size(); j++) {
-            int a = groupReps.get(group.get(i));
-            int b = groupReps.get(group.get(j));
+    List<Integer> groupIds = new ArrayList<>(groupReps.keySet());
+    
+    for (int i = 0; i < groupIds.size(); i++) {
+        for (int j = i + 1; j < groupIds.size(); j++) {
+            int group1 = groupIds.get(i);
+            int group2 = groupIds.get(j);
             
-            boolean alreadyCompared = false;
-            for (Pair p : diffPairs) {
-                if ((p.x() == a && p.y() == b) || (p.x() == b && p.y() == a)) {
-                    alreadyCompared = true;
-                    break;
-                }
-            }
-            
-            if (!alreadyCompared) {
-                requiredComparisons.add(new Pair(a, b));
+            // Check if these two groups were compared to be different yet 
+            Pair groupPair = new Pair(group1, group2);
+            if (!comparedGroupPairs.contains(groupPair)) {
+                // If not compared, add a comparison between representatives
+                int rep1 = groupReps.get(group1);
+                int rep2 = groupReps.get(group2);
+                requiredComparisons.add(new Pair(rep1, rep2));
             }
         }
     }
 
+
     return requiredComparisons;
-
-         
-    // return null; //dummy return, replace once implemented
-
     }
 
 
     private static void dfs(int specimen, HashMap<Integer, ArrayList<Integer>> graph,
                       Map<Integer, Integer> groups, int id) {
-    
         groups.put(specimen, id);
         if(graph.containsKey(specimen)){ // if there are neighbors, keep traversing through and add to groups
             for (int neighbor : graph.get(specimen)) {
@@ -150,10 +150,21 @@ public class Specimens {
 
 
     public static void main(String[] args) {
-        ArrayList<Pair> a1 = new ArrayList<>();
-        a1.addAll(Arrays.asList(new Pair (0, 1), new Pair (1, 2), new Pair (2, 3), new Pair (0, 3), 
-            new Pair (4, 5), new Pair (5, 6), new Pair (6, 7), new Pair (4, 7)));
-        System.out.println(processComparisons(8, a1, new ArrayList<Pair>()));
+        // all similarities
+        // ArrayList<Pair> a1 = new ArrayList<>();
+        // a1.addAll(Arrays.asList(new Pair (0, 1), new Pair (1, 2), new Pair (2, 3), new Pair (0, 3), 
+        //     new Pair (4, 5), new Pair (5, 6), new Pair (6, 7), new Pair (4, 7)));
+        // System.out.println(processComparisons(8, a1, new ArrayList<Pair>()));
+
+        // diffs and sims
+        ArrayList<Pair> sims1 = new ArrayList<>();
+        sims1.addAll(Arrays.asList(new Pair(0, 1), new Pair(1, 2), new Pair(0, 2), new Pair(3, 4), 
+            new Pair(4, 5), new Pair(3, 5), new Pair(6, 7), new Pair(7, 8), new Pair(6, 8), 
+            new Pair(9, 10), new Pair(10, 11), new Pair(9, 11)));
+
+        ArrayList<Pair> diffs1 = new ArrayList<>();
+        diffs1.addAll(Arrays.asList(new Pair(0, 3), new Pair(4, 7), new Pair(8, 11), new Pair(2, 9)));
+        System.out.println(processComparisons(8, sims1, diffs1));
 
     }
 
