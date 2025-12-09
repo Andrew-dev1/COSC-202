@@ -8,34 +8,34 @@ This repository contains assignments and lab work from a Data Structures and Alg
 
 ## Assignments Overview
 
-### 1. String Concatenation Optimization (`ConcatenationSeq/`)
+### 1. String Concatenation Optimization (`DynamicProgramming-StringConcatenation/`)
 Dynamic programming solution for optimal string concatenation order.
 
-### 2. Logarithmic List (`Lab05/`)
+### 2. Logarithmic List (`RedBlackBST-LogList/`)
 Red-Black BST implementation providing O(log n) list operations.
 
-### 3. Trie with Edit Distance (`Lab06/`)
+### 3. Trie with Edit Distance (`Trie-EditDistance/`)
 Trie data structure with word suggestion capabilities using edit distance.
 
-### 4. Finding Rank in Sorted Lists (`Lab4/`)
+### 4. Finding Rank in Sorted Lists (`BinarySearch-MergeRank/`)
 Binary search algorithm to find kth element in two sorted lists.
 
-### 5. Preference Similarity (`MergeSorting/`)
+### 5. Preference Similarity (`MergeSort-Inversions/`)
 Merge sort with inversion counting to calculate preference list similarity.
 
-### 6. Matrix Zero Operations (`Optimization/`)
+### 6. Matrix Zero Operations (`MatrixZeroRowCol/`)
 Hash set-based algorithm to zero matrix rows and columns.
 
-### 7. Text Formatting (`PrettyPrint/`)
+### 7. Text Formatting (`DynamicProgramming-TextFormatting/`)
 Dynamic programming for optimal text line breaking.
 
-### 8. Tile Puzzle Solver (`PriorityQueue/`)
+### 8. Tile Puzzle Solver (`AStar-PuzzleSolver/`)
 A* search algorithm using priority queue and Manhattan distance heuristic.
 
-### 9. Specimen Comparison (`RedBlackBST/`)
+### 9. Specimen Comparison (`Graph-DFS-Specimens/`)
 Graph algorithms (DFS) for processing specimen species relationships.
 
-### 10. Semantic Similarity (`Semantic_similarity/`)
+### 10. Semantic Similarity (`CosineSimilarity-HashMap/`)
 Cosine similarity calculation using hash map-based vector representations.
 
 ## Data Structures and Algorithms Covered
